@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block body %}
+{% set ep = request.endpoint or '' %}
+{% set nav = [
+  ('dashboard','Tableau de bord','dashboard',['dashboard']),
+  ('quotes','Devis','quotes',['quotes','quote_new','quote_edit','quote_detail']),
+  ('clients','Clients','clients',['clients','client_new','client_edit']),
+  ('products','Produits','products',['products','product_new','product_edit'])] %}
+{% if g.user.role == 'admin' %}{% set nav = nav + [('users','Utilisateurs','users',['users','user_new','user_edit'])] %}{% endif %}
+{% set nav = nav + [('profile','Profil','profile',['profile'])] %}
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><div class="mark">DP</div><div class="name">DevisPro</div></div>
+    <nav class="sidebar-section">
+      {% for endpoint, label, ic, group in nav %}
+      <a class="nav-item {{ 'active' if ep in group }}" href="{{ url_for(endpoint) }}">{{ icon(ic) }}<span>{{ label }}</span></a>
+      {% endfor %}
+    </nav>
+    <div class="sidebar-spacer"></div>
+    <div class="sidebar-foot">
+      {% if g.user.role == 'admin' %}
+      <a class="nav-item" href="{{ url_for('export_db') }}">{{ icon('download') }}<span>Exporter la base</span></a>
+      {% endif %}
+      <form method="post" action="{{ url_for('logout') }}">{{ csrf_field() }}
+        <button type="submit" class="nav-item nav-btn">{{ icon('logout') }}<span>Déconnexion</span></button>
+      </form>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="topbar"><div></div>
+      <div class="topbar-tools"><div class="user-chip">
+        <div class="user-avatar">{{ g.user.full_name|initials }}</div>
+        <div><div class="user-name">{{ g.user.full_name }}</div>
+          <span class="role-pill">{{ 'Administrateur' if g.user.role == 'admin' else 'Employé' }}</span></div>
+      </div></div>
+    </div>
+    <div class="page">{% block content %}{% endblock %}</div>
+  </div>
+</div>
+{% endblock %}

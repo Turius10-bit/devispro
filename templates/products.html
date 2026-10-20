@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="page-header">
+  <div><h1 class="page-title">Produits &amp; services</h1><p class="page-desc">Votre catalogue utilisé pour créer les devis.</p></div>
+  <div class="page-actions"><a class="btn btn-primary" href="{{ url_for('product_new') }}">{{ icon('plus') }} Ajouter un produit</a></div>
+</div>
+<form class="search-bar" method="get"><div class="search-input-wrap">{{ icon('search') }}
+  <input type="search" name="q" data-autosubmit placeholder="Rechercher un produit ou service…" value="{{ search }}"></div></form>
+{% if products %}
+<div class="table-wrap"><table>
+  <thead><tr><th>Nom</th><th>Unité</th><th class="num">Prix unitaire HT</th><th class="num">TVA</th><th></th></tr></thead>
+  <tbody>{% for p in products %}
+  <tr>
+    <td><strong>{{ p.name }}</strong>{% if p.description %}<div class="cell-sub">{{ p.description }}</div>{% endif %}</td>
+    <td>{{ p.unit }}</td><td class="num">{{ p.unit_price|money }}</td><td class="num">{{ p.tva_rate|num }}%</td>
+    <td><div class="cell-actions">
+      <a class="btn btn-ghost btn-icon" title="Modifier" href="{{ url_for('product_edit', pid=p.id) }}">{{ icon('edit') }}</a>
+      <form method="post" action="{{ url_for('product_delete', pid=p.id) }}" class="inline-form" data-confirm="Supprimer le produit « {{ p.name }} » ?">
+        {{ csrf_field() }}<button class="btn btn-ghost btn-icon" title="Supprimer">{{ icon('trash') }}</button></form>
+    </div></td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% else %}
+<div class="table-wrap"><div class="empty-state">{{ icon('empty') }}<p>Aucun produit trouvé.</p></div></div>
+{% endif %}
+{% endblock %}

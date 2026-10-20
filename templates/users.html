@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="page-header">
+  <div><h1 class="page-title">Utilisateurs</h1><p class="page-desc">Gérez les comptes et les rôles (Administrateur / Employé).</p></div>
+  <div class="page-actions"><a class="btn btn-primary" href="{{ url_for('user_new') }}">{{ icon('plus') }} Ajouter un utilisateur</a></div>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Nom</th><th>Identifiant</th><th>E-mail</th><th>Rôle</th><th></th></tr></thead>
+  <tbody>{% for u in users %}
+  <tr>
+    <td><div class="user-chip"><div class="user-avatar">{{ u.full_name|initials }}</div><strong>{{ u.full_name }}</strong></div></td>
+    <td class="mono">{{ u.username }}</td>
+    <td>{% if u.email %}{{ u.email }}{% else %}<span class="text-muted">—</span>{% endif %}</td>
+    <td><span class="role-pill">{{ 'Administrateur' if u.role == 'admin' else 'Employé' }}</span></td>
+    <td><div class="cell-actions">
+      <a class="btn btn-ghost btn-icon" title="Modifier" href="{{ url_for('user_edit', uid=u.id) }}">{{ icon('edit') }}</a>
+      <form method="post" action="{{ url_for('user_delete', uid=u.id) }}" class="inline-form" data-confirm="Supprimer l'utilisateur « {{ u.full_name }} » ?">
+        {{ csrf_field() }}<button class="btn btn-ghost btn-icon" title="Supprimer">{{ icon('trash') }}</button></form>
+    </div></td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+<div class="login-hint" style="margin-top:16px;max-width:520px;">
+  {{ icon('upload') }} L'import d'une base de données remplace l'intégralité des données actuelles (utilisateurs, clients, produits, devis). Une copie de la base actuelle est conservée dans <code>instance/backups/</code>.
+  <form method="post" action="{{ url_for('import_db') }}" enctype="multipart/form-data" style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center"
+        data-confirm="Importer cette base remplacera toutes les données actuelles et vous déconnectera. Continuer ?">
+    {{ csrf_field() }}
+    <input type="file" name="file" accept=".sqlite,.db" required style="flex:1;min-width:200px">
+    <button class="btn btn-secondary btn-sm" type="submit">Importer</button>
+  </form>
+</div>
+{% endblock %}

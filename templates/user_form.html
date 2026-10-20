@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="page-header"><div><h1 class="page-title">{{ "Modifier l'utilisateur" if editing else 'Ajouter un utilisateur' }}</h1></div></div>
+<form method="post" class="card" style="max-width:640px">{{ csrf_field() }}
+  <div class="card-body">
+    <div class="row-2">
+      <div class="field"><label for="full_name">Nom complet *</label><input type="text" id="full_name" name="full_name" required autofocus value="{{ user.full_name or '' }}"></div>
+      <div class="field"><label for="username">Identifiant *</label><input type="text" id="username" name="username" required value="{{ user.username or '' }}"></div>
+    </div>
+    <div class="row-2">
+      <div class="field"><label for="email">E-mail</label><input type="email" id="email" name="email" value="{{ user.email or '' }}"></div>
+      <div class="field"><label for="role">Rôle</label>
+        <select id="role" name="role"><option value="employe" {{ 'selected' if user.role == 'employe' }}>Employé</option><option value="admin" {{ 'selected' if user.role == 'admin' }}>Administrateur</option></select></div>
+    </div>
+    <div class="field"><label for="password">{{ 'Nouveau mot de passe (laisser vide pour ne pas changer)' if editing else 'Mot de passe *' }}</label>
+      <input type="password" id="password" name="password" minlength="4" autocomplete="new-password" {{ '' if editing else 'required' }}></div>
+  </div>
+  <div class="modal-footer"><a class="btn btn-secondary" href="{{ url_for('users') }}">Annuler</a>
+    <button type="submit" class="btn btn-primary">{{ icon('check') }} Enregistrer</button></div>
+</form>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="page-header"><div><h1 class="page-title">Mon profil</h1><p class="page-desc">Gérez vos informations personnelles.</p></div></div>
+<div class="dash-grid">
+  <div class="card"><div class="card-head"><h3>Informations</h3></div><div class="card-body">
+    <form method="post" action="{{ url_for('profile') }}">{{ csrf_field() }}
+      <div class="field"><label for="full_name">Nom complet</label><input type="text" id="full_name" name="full_name" required value="{{ g.user.full_name }}"></div>
+      <div class="field"><label for="email">E-mail</label><input type="email" id="email" name="email" value="{{ g.user.email or '' }}"></div>
+      <div class="field"><label>Identifiant</label><input type="text" value="{{ g.user.username }}" disabled style="background:var(--surface-2);"></div>
+      <button type="submit" class="btn btn-primary">{{ icon('check') }} Mettre à jour</button>
+    </form></div></div>
+  <div class="card"><div class="card-head"><h3>Changer le mot de passe</h3></div><div class="card-body">
+    <form method="post" action="{{ url_for('profile_password') }}">{{ csrf_field() }}
+      <div class="field"><label for="current">Mot de passe actuel</label><input type="password" id="current" name="current" required autocomplete="current-password"></div>
+      <div class="field"><label for="new">Nouveau mot de passe</label><input type="password" id="new" name="new" required minlength="4" autocomplete="new-password"></div>
+      <button type="submit" class="btn btn-secondary">{{ icon('check') }} Changer le mot de passe</button>
+    </form></div></div>
+</div>
+{% endblock %}

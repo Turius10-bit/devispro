@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Connexion — DevisPro{% endblock %}
+{% block body %}
+<div class="login-wrap">
+  <div class="login-card">
+    <div class="login-badge">DP</div>
+    <h1 class="font-display">DevisPro</h1>
+    <p class="login-sub">Connectez-vous pour gérer vos devis, clients et produits.</p>
+    {% if error %}<div class="login-error">{{ error }}</div>{% endif %}
+    <form method="post" action="{{ url_for('login') }}">
+      {{ csrf_field() }}
+      <input type="hidden" name="next" value="{{ next }}">
+      <div class="field"><label for="username">Identifiant</label>
+        <input type="text" id="username" name="username" autocomplete="username" required autofocus></div>
+      <div class="field"><label for="password">Mot de passe</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" required></div>
+      <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

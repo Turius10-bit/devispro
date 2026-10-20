@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="page-header">
+  <div><h1 class="page-title">Tableau de bord</h1><p class="page-desc">Vue d'ensemble de votre activité de devis.</p></div>
+  <div class="page-actions"><a class="btn btn-primary" href="{{ url_for('quote_new') }}">{{ icon('plus') }} Nouveau devis</a></div>
+</div>
+<div class="stat-grid">
+  <div class="stat-card"><div class="stat-label">Devis émis</div><div class="stat-value">{{ stats.total }}</div><div class="stat-sub">Tous statuts confondus</div></div>
+  <div class="stat-card"><div class="stat-label">Clients</div><div class="stat-value">{{ stats.clients }}</div><div class="stat-sub">Dans votre carnet</div></div>
+  <div class="stat-card"><div class="stat-label">Devis acceptés</div><div class="stat-value" style="color:var(--primary)">{{ stats.counts.accepte }}</div>
+    <div class="stat-sub">{{ (stats.counts.accepte / stats.total * 100)|round|int if stats.total else 0 }}% du total</div></div>
+  <div class="stat-card"><div class="stat-label">Devis refusés</div><div class="stat-value" style="color:var(--danger)">{{ stats.counts.refuse }}</div>
+    <div class="stat-sub">{{ (stats.counts.refuse / stats.total * 100)|round|int if stats.total else 0 }}% du total</div></div>
+</div>
+<div class="dash-grid">
+  <div class="card">
+    <div class="card-head"><h3>Devis récents</h3><a class="btn btn-ghost btn-sm" href="{{ url_for('quotes') }}">Voir tout</a></div>
+    <div class="card-body">
+      {% for q in recent %}
+      <a class="recent-row row-click" href="{{ url_for('quote_detail', qid=q.id) }}" style="text-decoration:none">
+        <span class="num mono">{{ q.quote_number }}</span>
+        <div class="rc"><div class="rc-name">{{ q.client_name }}</div><div class="rc-client">{{ q.issue_date|fdate }}</div></div>
+        <span class="stamp {{ STATUS[q.status].cls }}">{{ STATUS[q.status].label }}</span>
+        <span class="rc-amt">{{ q.total|money }}</span>
+      </a>
+      {% else %}
+      <div class="empty-state">{{ icon('empty') }}<p>Aucun devis pour l'instant.</p></div>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><h3>Répartition par statut</h3></div>
+    <div class="card-body">
+      {% for key, s in STATUS.items() %}
+      <div class="bar-row"><span class="bar-label">{{ s.label }}</span>
+        <div class="bar-track"><div class="bar-fill" style="width:{{ stats.counts[key] / stats.max * 100 }}%;background:{{ s.color }}"></div></div>
+        <span class="bar-count">{{ stats.counts[key] }}</span></div>
+      {% endfor %}
+      <div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--border);display:flex;justify-content:space-between;">
+        <span class="text-muted" style="font-size:12.5px;">CA sur devis acceptés</span>
+        <span class="mono" style="font-weight:700;">{{ stats.revenue|money }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="page-header">
+  <div><h1 class="page-title">Devis</h1><p class="page-desc">Créez, suivez et gérez tous vos devis.</p></div>
+  <div class="page-actions"><a class="btn btn-primary" href="{{ url_for('quote_new') }}">{{ icon('plus') }} Nouveau devis</a></div>
+</div>
+<form class="search-bar" method="get" id="filter-form">
+  <div class="search-input-wrap">{{ icon('search') }}
+    <input type="search" name="q" data-autosubmit placeholder="Rechercher par n° de devis ou client…" value="{{ search }}"></div>
+  <select name="status" style="width:auto;" onchange="this.form.submit()">
+    <option value="all">Tous les statuts</option>
+    {% for k, s in STATUS.items() %}<option value="{{ k }}" {{ 'selected' if status == k }}>{{ s.label }}</option>{% endfor %}
+  </select>
+</form>
+{% if quotes %}
+<div class="table-wrap"><table>
+  <thead><tr><th>N° devis</th><th>Client</th><th>Émis le</th><th class="num">Total TTC</th><th>Statut</th><th></th></tr></thead>
+  <tbody>
+  {% for q in quotes %}
+  <tr>
+    <td><a href="{{ url_for('quote_detail', qid=q.id) }}" style="text-decoration:none"><span class="mono" style="font-weight:600;">{{ q.quote_number }}</span></a></td>
+    <td>{{ q.client_name }}{% if q.client_company %}<div class="cell-sub">{{ q.client_company }}</div>{% endif %}</td>
+    <td>{{ q.issue_date|fdate }}</td>
+    <td class="num">{{ q.total|money }}</td>
+    <td>
+      <form method="post" action="{{ url_for('quote_status', qid=q.id) }}">{{ csrf_field() }}
+        <input type="hidden" name="next" value="{{ request.full_path.rstrip('?') }}">
+        <select name="status" class="status-select" onchange="this.form.submit()">
+          {% for k, s in STATUS.items() %}<option value="{{ k }}" {{ 'selected' if q.status == k }}>{{ s.label }}</option>{% endfor %}
+        </select>
+      </form>
+    </td>
+    <td><div class="cell-actions">
+      <a class="btn btn-ghost btn-icon" title="Consulter" href="{{ url_for('quote_detail', qid=q.id) }}">{{ icon('eye') }}</a>
+      <a class="btn btn-ghost btn-icon" title="Modifier" href="{{ url_for('quote_edit', qid=q.id) }}">{{ icon('edit') }}</a>
+      <form method="post" action="{{ url_for('quote_delete', qid=q.id) }}" class="inline-form" data-confirm="Supprimer le devis {{ q.quote_number }} ? Cette action est irréversible.">
+        {{ csrf_field() }}<button class="btn btn-ghost btn-icon" title="Supprimer">{{ icon('trash') }}</button></form>
+    </div></td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% else %}
+<div class="table-wrap"><div class="empty-state">{{ icon('empty') }}<p>Aucun devis trouvé.</p></div></div>
+{% endif %}
+{% endblock %}

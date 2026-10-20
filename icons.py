@@ -1,0 +1,22 @@
+"""Tracés SVG des icônes utilisées par les templates."""
+ICONS = {
+    'dashboard': '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+    'clients': '<circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.2-4 4-6 7.5-6s6.3 2 7.5 6"/>',
+    'products': '<path d="M3 8l9-5 9 5-9 5-9-5z"/><path d="M3 8v9l9 5 9-5V8"/><path d="M12 13v9"/>',
+    'quotes': '<path d="M6 3h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/><path d="M8.5 13h7M8.5 16.5h7M8.5 9.5h3"/>',
+    'users': '<circle cx="9" cy="8" r="3.2"/><path d="M2.7 19c1-3.4 3.3-5.2 6.3-5.2s5.3 1.8 6.3 5.2"/><circle cx="18" cy="8.5" r="2.4"/><path d="M15.8 13.6c2 .2 3.5 1.7 4.3 4.4"/>',
+    'profile': '<circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4.5 4.5-7 8-7s6.5 2.5 8 7"/>',
+    'logout': '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>',
+    'search': '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+    'plus': '<path d="M12 5v14M5 12h14"/>',
+    'edit': '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>',
+    'trash': '<path d="M3 6h18"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6l-1 14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1L5 6"/><path d="M10 11v6M14 11v6"/>',
+    'eye': '<path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7-10.5-7-10.5-7z"/><circle cx="12" cy="12" r="3"/>',
+    'printer': '<path d="M6 9V3h12v6"/><rect x="4" y="9" width="16" height="8" rx="1.5"/><path d="M6 14h12v7H6z"/>',
+    'download': '<path d="M12 3v13"/><path d="M6.5 11L12 16.5 17.5 11"/><path d="M4 20h16"/>',
+    'upload': '<path d="M12 21V8"/><path d="M6.5 12.5L12 7l5.5 5.5"/><path d="M4 20h16"/>',
+    'close': '<path d="M18 6L6 18M6 6l12 12"/>',
+    'empty': '<path d="M4 7h16l-1.5 12.5a1 1 0 0 1-1 .9H6.5a1 1 0 0 1-1-.9L4 7z"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/>',
+    'stamp': '<circle cx="12" cy="8" r="5.5"/><path d="M12 13.5V19M8 21.5l1.2-2.5h5.6l1.2 2.5"/>',
+    'check': '<path d="M20 6L9 17l-5-5"/>',
+}

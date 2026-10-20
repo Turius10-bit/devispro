@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+{% block title %}{{ quote.quote_number }} — DevisPro{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title mono">{{ quote.quote_number }}</h1>
+    <p class="page-desc">Client : {{ client.name if client else '(client supprimé)' }} · Émis le {{ quote.issue_date|fdate }}</p>
+  </div>
+  <div class="page-actions">
+    <form method="post" action="{{ url_for('quote_status', qid=quote.id) }}" class="inline-form">{{ csrf_field() }}
+      <input type="hidden" name="next" value="{{ request.path }}">
+      <select name="status" class="status-select" onchange="this.form.submit()">
+        {% for k, s in STATUS.items() %}<option value="{{ k }}" {{ 'selected' if quote.status == k }}>{{ s.label }}</option>{% endfor %}
+      </select>
+    </form>
+    <a class="btn btn-secondary" href="{{ url_for('quote_edit', qid=quote.id) }}">{{ icon('edit') }} Modifier</a>
+    <button class="btn btn-secondary" type="button" onclick="window.print()">{{ icon('printer') }} Imprimer / PDF</button>
+    <form method="post" action="{{ url_for('quote_delete', qid=quote.id) }}" class="inline-form" data-confirm="Supprimer le devis {{ quote.quote_number }} ? Cette action est irréversible.">
+      {{ csrf_field() }}<button class="btn btn-danger">{{ icon('trash') }} Supprimer</button></form>
+  </div>
+</div>
+
+<div class="print-area"><div class="doc-sheet">
+  <div class="doc-top">
+    <div class="doc-brand"><div class="mark">DP</div>
+      <div class="biz">{{ COMPANY.name }}<small>{{ COMPANY.address }}{% if COMPANY.email %} · {{ COMPANY.email }}{% endif %}</small></div></div>
+    <div class="doc-id"><div class="lbl">Devis n°</div><div class="num">{{ quote.quote_number }}</div>
+      <div style="margin-top:8px;"><span class="stamp {{ STATUS[quote.status].cls }}">{{ STATUS[quote.status].label }}</span></div></div>
+  </div>
+  <div class="doc-meta-grid">
+    <div class="doc-meta-block"><div class="lbl">Adressé à</div>
+      {% if client %}
+      <div class="client-name">{{ client.name }}</div>
+      {% for f in (client.company, client.address, client.email, client.phone) %}{% if f %}<div class="line">{{ f }}</div>{% endif %}{% endfor %}
+      {% else %}<div class="client-name">(client supprimé)</div>{% endif %}
+    </div>
+    <div class="doc-meta-block doc-dates"><div class="lbl">Détails</div>
+      <div><strong>Date d'émission :</strong> {{ quote.issue_date|fdate }}</div>
+      <div><strong>Valable jusqu'au :</strong> {{ quote.validity_date|fdate }}</div>
+      {% if author %}<div><strong>Établi par :</strong> {{ author.full_name }}</div>{% endif %}
+    </div>
+  </div>
+  <table class="doc-items">
+    <thead><tr><th>Désignation</th><th class="num">Qté</th><th class="num">Prix U. HT</th><th class="num">TVA</th><th class="num">Total HT</th></tr></thead>
+    <tbody>
+    {% for it in items %}<tr><td>{{ it.description }}</td><td class="num">{{ it.quantity|num }}</td>
+      <td class="num">{{ it.unit_price|money }}</td><td class="num">{{ it.tva_rate|num }}%</td><td class="num">{{ it.line_total|money }}</td></tr>{% endfor %}
+    </tbody>
+  </table>
+  <div class="doc-totals">
+    <div class="totals-row"><span>Sous-total HT</span><span class="mono">{{ quote.subtotal|money }}</span></div>
+    <div class="totals-row"><span>TVA</span><span class="mono">{{ quote.tva_amount|money }}</span></div>
+    <div class="totals-row grand"><span>Total TTC</span><span>{{ quote.total|money }}</span></div>
+  </div>
+  <div class="doc-foot">
+    <div class="doc-notes">{{ quote.notes or '' }}</div>
+    <div class="signature-box"><div class="sig-lbl">Bon pour accord — Date &amp; signature</div><div class="sig-line">Client</div></div>
+  </div>
+</div></div>
+{% endblock %}

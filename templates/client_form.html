@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="page-header"><div><h1 class="page-title">{{ 'Modifier le client' if editing else 'Ajouter un client' }}</h1></div></div>
+<form method="post" class="card" style="max-width:640px">{{ csrf_field() }}
+  <div class="card-body">
+    <div class="field"><label for="name">Nom complet *</label><input type="text" id="name" name="name" required autofocus value="{{ client.name if client else '' }}"></div>
+    <div class="field"><label for="company">Société</label><input type="text" id="company" name="company" value="{{ client.company or '' if client else '' }}"></div>
+    <div class="row-2">
+      <div class="field"><label for="email">E-mail</label><input type="email" id="email" name="email" value="{{ client.email or '' if client else '' }}"></div>
+      <div class="field"><label for="phone">Téléphone</label><input type="text" id="phone" name="phone" value="{{ client.phone or '' if client else '' }}"></div>
+    </div>
+    <div class="field"><label for="address">Adresse</label><textarea id="address" name="address">{{ client.address or '' if client else '' }}</textarea></div>
+  </div>
+  <div class="modal-footer"><a class="btn btn-secondary" href="{{ url_for('clients') }}">Annuler</a>
+    <button type="submit" class="btn btn-primary">{{ icon('check') }} Enregistrer</button></div>
+</form>
+{% endblock %}

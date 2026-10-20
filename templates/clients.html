@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="page-header">
+  <div><h1 class="page-title">Clients</h1><p class="page-desc">Gérez votre carnet de clients.</p></div>
+  <div class="page-actions"><a class="btn btn-primary" href="{{ url_for('client_new') }}">{{ icon('plus') }} Ajouter un client</a></div>
+</div>
+<form class="search-bar" method="get"><div class="search-input-wrap">{{ icon('search') }}
+  <input type="search" name="q" data-autosubmit placeholder="Rechercher par nom, société ou email…" value="{{ search }}"></div></form>
+{% if clients %}
+<div class="table-wrap"><table>
+  <thead><tr><th>Client</th><th>Société</th><th>Contact</th><th>Devis</th><th></th></tr></thead>
+  <tbody>{% for c in clients %}
+  <tr>
+    <td><strong>{{ c.name }}</strong>{% if c.address %}<div class="cell-sub">{{ c.address }}</div>{% endif %}</td>
+    <td>{% if c.company %}{{ c.company }}{% else %}<span class="text-muted">—</span>{% endif %}</td>
+    <td>{{ c.email or '' }}{% if c.phone %}<div class="cell-sub">{{ c.phone }}</div>{% endif %}</td>
+    <td>{{ c.nb }}</td>
+    <td><div class="cell-actions">
+      <a class="btn btn-ghost btn-icon" title="Modifier" href="{{ url_for('client_edit', cid=c.id) }}">{{ icon('edit') }}</a>
+      <form method="post" action="{{ url_for('client_delete', cid=c.id) }}" class="inline-form" data-confirm="Supprimer le client « {{ c.name }} » ?">
+        {{ csrf_field() }}<button class="btn btn-ghost btn-icon" title="Supprimer">{{ icon('trash') }}</button></form>
+    </div></td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% else %}
+<div class="table-wrap"><div class="empty-state">{{ icon('empty') }}<p>Aucun client trouvé.</p><p class="text-muted">Essayez une autre recherche ou ajoutez un nouveau client.</p></div></div>
+{% endif %}
+{% endblock %}
